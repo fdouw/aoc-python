@@ -10,7 +10,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 
 part1 = 0
 part2 = 0
-with open("inputs/day02") as f:
+with open("inputs/day02", "r") as f:
     for line in f.readlines():
         # for line in test_data.splitlines():
         game, draws = line.strip().replace(" ", "").split(":")

@@ -2,7 +2,7 @@
 
 import os
 
-with open(f"{os.path.dirname(__file__)}/inputs/day06") as f:
+with open(f"inputs/day06", "r") as f:
     times = map(int, f.readline().split(":")[1].split())
     dists = map(int, f.readline().split(":")[1].split())
 

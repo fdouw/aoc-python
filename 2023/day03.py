@@ -4,7 +4,7 @@ import re
 
 pattern_num = re.compile(r"\d+")
 
-with open("inputs/day03") as f:
+with open("inputs/day03", "r") as f:
     # Find the symbols
     symbols = set(
         (col, row) if not (c.isdigit() or c == ".") else None

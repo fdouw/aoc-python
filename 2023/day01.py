@@ -43,7 +43,7 @@ def parse_line(line: str):
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 part1 = 0
 part2 = 0
-with open("inputs/day01") as f:
+with open("inputs/day01", "r") as f:
     for line in f.readlines():
         stripped = line.strip().strip(alphabet)
         part1 += int(stripped[0] + stripped[-1])

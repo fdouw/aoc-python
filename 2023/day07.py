@@ -64,7 +64,7 @@ class Hand:
             print(f"NO TYPE: {self.hand} ;; {groups}")
 
 
-with open("inputs/day07") as f:
+with open("inputs/day07", "r") as f:
     hands = [Hand(line.strip()) for line in f.readlines()]
     ranked_hands = sorted(hands, key=lambda h: (h.type, h.hand))
     ranked_hands2 = sorted(hands, key=lambda h: (h.type2, h.hand2))

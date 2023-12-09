@@ -3,7 +3,7 @@
 
 points = 0
 cards = []
-with open("inputs/day04") as f:
+with open("inputs/day04", "r") as f:
     for line in f.readlines():
         _card, nums = line.split(":")
         win_nums, have_nums = map(

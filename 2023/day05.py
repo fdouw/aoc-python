@@ -52,7 +52,7 @@ class mapper:
         return res
 
 
-with open("inputs/day05") as f:
+with open("inputs/day05", "r") as f:
     seed_list = list(map(int, f.readline().split(":")[1].strip().split(" ")))
 
     # Read maps
