@@ -87,7 +87,6 @@ with open("inputs/day08", "r") as f:
 
     period, _phase = reduce(combine_periodics, zip(periods, phases))
     part2 = period
-    print(lcm(*periods))
 
 
 print(f"Part 1: {part1}")

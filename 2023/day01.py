@@ -50,5 +50,5 @@ with open("inputs/day01", "r") as f:
         part2 += parse_line(line.strip())
 
 
-print(f"Part1: {part1}")
-print(f"Part2: {part2}")
+print(f"Part 1: {part1}")
+print(f"Part 2: {part2}")

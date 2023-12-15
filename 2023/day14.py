@@ -158,7 +158,7 @@ for idx in range(1_000_000_000):
         period = idx + 1 - prev_idx
         remainder = (1_000_000_000 - prev_idx) % period
         p2_data = history[prev_idx + remainder]
-        print(f"Breaking at {idx + 1}")
+        # print(f"Breaking at {idx + 1}")
         break
 platform = [[parse_char(item) for item in line] for line in p2_data.splitlines(False)]
 part2 = compute_load(platform)
