@@ -111,6 +111,8 @@ def run_cycle(platform_data: str) -> str:
     return "\n".join("".join(".O#"[x] for x in line) for line in platform)
 
 
+# Worst case example provided by u/colecancode on Reddit:
+# https://www.reddit.com/r/adventofcode/comments/18it12w/2023_day_14_part_2_custom_worst_case_testcase/
 with open("inputs/day14", "r") as f:
     data = f.read()
 
