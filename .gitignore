@@ -1,3 +1,4 @@
 .vscode
 */inputs
 */*.png
+__pycache__
