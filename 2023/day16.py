@@ -2,11 +2,11 @@
 
 # region constants
 
-EMPTY = "."
-HSPLIT = "-"
-VSPLIT = "|"
-MIRROR_FW = "/"
-MIRROR_BW = "\\"
+EMPTY = 0
+HSPLIT = 1
+VSPLIT = 2
+MIRROR_FW = 3
+MIRROR_BW = 4
 
 NORTH = 0
 EAST = 1
@@ -40,15 +40,15 @@ def next_tiles(x: int, y: int, tile: str, dir):
         if nb := neighbour(x, y, dir):
             yield nb
     elif tile == MIRROR_BW:
-        to = {NORTH: WEST, EAST: SOUTH, SOUTH: EAST, WEST: NORTH}[dir]
+        to = (WEST, SOUTH, EAST, NORTH)[dir]
         if nb := neighbour(x, y, to):
             yield nb
     elif tile == MIRROR_FW:
-        to = {NORTH: EAST, EAST: NORTH, SOUTH: WEST, WEST: SOUTH}[dir]
+        to = (EAST, NORTH, WEST, SOUTH)[dir]
         if nb := neighbour(x, y, to):
             yield nb
     elif tile == HSPLIT:
-        if dir in [EAST, WEST]:
+        if dir == EAST or dir == WEST:
             if nb := neighbour(x, y, dir):
                 yield nb
         else:
@@ -57,7 +57,7 @@ def next_tiles(x: int, y: int, tile: str, dir):
             if nb := neighbour(x, y, WEST):
                 yield nb
     elif tile == VSPLIT:
-        if dir in [NORTH, SOUTH]:
+        if dir == NORTH or dir == SOUTH:
             if nb := neighbour(x, y, dir):
                 yield nb
         else:
@@ -71,7 +71,7 @@ def trace_beam(init_x: int, init_y: int, init_dir) -> int:
     # Keep track of the tiles that the beams pass (maybe grid is more efficient?)
     # Also keep track of history (incl. direction): there are loops in the beam patterns!
     # We need to do this separately, because beams can cross paths.
-    # visited = set()
+    visited = set()
     history = set()
 
     # Keep track of beams as (x,y,direction)
@@ -79,15 +79,16 @@ def trace_beam(init_x: int, init_y: int, init_dir) -> int:
     # direction is the direction we're moving towards
     beams = [(init_x, init_y, init_dir)]
     while beams:
-        x, y, dir = beams.pop()
+        beam = beams.pop()
+        x, y, dir = beam
 
-        if (x, y, dir) not in history and 0 <= x < width and 0 <= y < height:
-            # visited.add((x, y))
-            history.add((x, y, dir))
+        if beam not in history and 0 <= x < width and 0 <= y < height:
+            visited.add((x, y))
+            if layout[y][x] != EMPTY:
+                history.add(beam)
             beams.extend(next_tiles(x, y, layout[y][x], dir))
 
-    # return len(visited)
-    return len(set((x, y) for x, y, _ in history))
+    return len(visited)
 
 
 # endregion functions
@@ -95,18 +96,18 @@ def trace_beam(init_x: int, init_y: int, init_dir) -> int:
 ################################################################################
 
 with open("inputs/day16", "r") as f:
-    layout = [line.strip() for line in f.readlines()]
+    items = {".": EMPTY, "-": HSPLIT, "|": VSPLIT, "/": MIRROR_FW, "\\": MIRROR_BW}
+    layout = [[items[c] for c in line.strip()] for line in f.readlines()]
 
 width = len(layout[0])
 height = len(layout)
 
-part2 = 0
-for x in range(width):
-    part2 = max(part2, trace_beam(x, 0, SOUTH))
-    part2 = max(part2, trace_beam(x, height - 1, NORTH))
-for y in range(height):
-    part2 = max(part2, trace_beam(0, y, EAST))
-    part2 = max(part2, trace_beam(width - 1, y, WEST))
+part2 = max(
+    max(trace_beam(x, 0, SOUTH) for x in range(width)),
+    max(trace_beam(x, height - 1, NORTH) for x in range(width)),
+    max(trace_beam(0, y, EAST) for y in range(height)),
+    max(trace_beam(width - 1, y, WEST) for y in range(height)),
+)
 
 
 print(f"Part 1: {trace_beam(0,0,EAST)}")
