@@ -10,7 +10,7 @@ SOUTH = 0 + 1j
 WEST = -1 + 0j
 
 
-with open("inputs/day17", "r") as f:
+with open("inputs/day17_test2", "r") as f:
     city_map = {
         complex(x, y): loss
         for y, l in enumerate(f.readlines())
@@ -27,8 +27,8 @@ def search(min_run: int, max_run: int) -> int:
     # (hypothesis, heat loss on the path, current straight run, current direction, current position)
     paths = PriorityQueue()
     h = int(abs(end_point))
-    paths.put((h, 0, 1, next(unique), EAST, 0 + 0j))
-    paths.put((h, 0, 1, next(unique), SOUTH, 0 + 0j))
+    paths.put((h, 0, 0, next(unique), EAST, 0 + 0j))
+    paths.put((h, 0, 0, next(unique), SOUTH, 0 + 0j))
 
     history = set()
 
@@ -39,7 +39,7 @@ def search(min_run: int, max_run: int) -> int:
             # We've seen a shorter path through here
             continue
         history.add(hist)
-        if pos == end_point and run_len > min_run:
+        if pos == end_point and run_len >= min_run:
             # Found the path!
             return heat_loss
         pos += dir
@@ -47,11 +47,11 @@ def search(min_run: int, max_run: int) -> int:
             heat_loss += city_map[pos]
             h = int(abs(end_point - pos)) + heat_loss
             # Turn left and right
-            if run_len >= min_run:
-                paths.put((h, heat_loss, 1, next(unique), dir * 1j, pos))
-                paths.put((h, heat_loss, 1, next(unique), dir * -1j, pos))
+            if run_len + 1 >= min_run:
+                paths.put((h, heat_loss, 0, next(unique), dir * 1j, pos))
+                paths.put((h, heat_loss, 0, next(unique), dir * -1j, pos))
             # Go straight
-            if run_len < max_run:
+            if run_len + 1 < max_run:
                 paths.put((h, heat_loss, run_len + 1, next(unique), dir, pos))
 
 
