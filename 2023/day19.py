@@ -110,7 +110,6 @@ def accept(flow_name: str, rating) -> bool:
 
 with open("inputs/day19", "r") as f:
     flow_data, part_data = f.read().split("\n\n")
-    # flow_data, part_data = test_data4.split("\n\n")
 
     ratings = [
         (int(a), int(b), int(c), int(d))
@@ -125,7 +124,7 @@ with open("inputs/day19", "r") as f:
 part1 = sum(sum(rating) for rating in ratings if accept("in", rating))
 
 # Part 2
-accepted = set()
+accepted = 0
 queue = Queue()
 queue.put(("in", RangedRatings()))
 
@@ -133,7 +132,7 @@ while not queue.empty():
     flow_name, ratings = queue.get()
 
     if flow_name == "A":
-        accepted.add(ratings.count())
+        accepted += ratings.count()
     elif flow_name != "R":
         # Skip the last: it will be a default value, without condition
         for rule in workflows[flow_name][:-1]:
@@ -160,4 +159,4 @@ while not queue.empty():
             queue.put((workflows[flow_name][-1], ratings))
 
 print(f"Part 1: {part1}")
-print(f"Part 2: {sum(accepted)}")
+print(f"Part 2: {accepted}")
