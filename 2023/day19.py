@@ -5,6 +5,30 @@ from queue import Queue
 import re
 
 
+# Answer: 128000000000000
+test_data1 = """in{x<2001:A,R}
+
+{x=1,m=1,a=1,s=1}"""
+
+# Answer: 1
+test_data2 = """in{x<4000:R,m<4000:R,a<4000:R,s<4000:R,A}
+
+{x=1,m=1,a=1,s=1}"""
+
+# Answer: 1
+test_data3 = """in{x>1:R,m>1:R,a>1:R,s>1:R,A}
+
+{x=1,m=1,a=1,s=1}"""
+
+test_data4 = """in{x>2023:A,m<13:A,A}
+
+{x=1,m=1,a=1,s=1}"""
+
+test_data5 = """in{a<2000:A,A}
+
+{x=1,m=1,a=1,s=1}"""
+
+
 rule_split_pattern = re.compile(r"([<>:])")
 rule_label_pattern = re.compile(r"^[ARa-z]+$")
 
@@ -86,6 +110,7 @@ def accept(flow_name: str, rating) -> bool:
 
 with open("inputs/day19", "r") as f:
     flow_data, part_data = f.read().split("\n\n")
+    # flow_data, part_data = test_data4.split("\n\n")
 
     ratings = [
         (int(a), int(b), int(c), int(d))
@@ -118,21 +143,21 @@ while not queue.empty():
                 if lo != None:
                     queue.put((nxt, lo))
                 # Continue the current flow with the remaining ranges, break if we're out
-                if hi != None:
-                    ratings = hi
-                else:
-                    break
+                ratings = hi
+
             if cmp == ">":
                 lo, hi = ratings.split_above(lhs, rhs)
                 if hi != None:
                     queue.put((nxt, hi))
                 # Continue the current flow with the remaining ranges, break if we're out
-                if lo != None:
-                    ratings = lo
-                else:
-                    break
+                ratings = lo
 
-        queue.put((workflows[flow_name][-1], ratings))
+            if ratings == None:
+                break
+
+        if ratings != None:
+            # Last rule is a default
+            queue.put((workflows[flow_name][-1], ratings))
 
 print(f"Part 1: {part1}")
 print(f"Part 2: {sum(accepted)}")
