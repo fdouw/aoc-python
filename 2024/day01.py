@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from collections import defaultdict
+from collections import Counter
 
 
 left = []
@@ -13,9 +13,7 @@ with open("inputs/day01", "r") as f:
 
 part1 = sum((abs(l - r) for (l, r) in zip(sorted(left), sorted(right))))
 
-num_counts = defaultdict(int)
-for n in right:
-    num_counts[n] += 1
+num_counts = Counter(right)
 part2 = sum(n * num_counts[n] for n in left)
 
 
