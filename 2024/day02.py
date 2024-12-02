@@ -14,20 +14,21 @@ def inc(t):
 
 
 def test(report):
-    if all(map(dec, pairwise(report))) or all(map(inc, pairwise(report))):
+    return all(map(dec, pairwise(report))) or all(map(inc, pairwise(report)))
+
+
+def reduce_test(report):
+    if test(report):
         return True
-    else:
-        for i in range(len(report)):
-            short = report[:i] + report[i + 1 :]
-            if all(map(dec, pairwise(short))) or all(map(inc, pairwise(short))):
-                return True
+    for i in range(len(report)):
+        short = report[:i] + report[i + 1 :]
+        if test(short):
+            return True
     return False
 
 
 with open("inputs/day02") as f:
     reports = [[int(s) for s in line.split()] for line in f.readlines()]
 
-print(
-    f"Part 1: {sum(1 for report in reports if all(map(dec, pairwise(report)))or all(map(inc, pairwise(report))))}"
-)
-print(f"Part 2: {sum(1 for report in reports if test(report))}")
+print(f"Part 1: {sum(map(test,reports))}")
+print(f"Part 2: {sum(map(reduce_test,reports))}")
