@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from collections import defaultdict
 from typing import Tuple
 
 
@@ -16,9 +15,10 @@ def in_area(pos):
     return 0 <= pos[0] < width and 0 <= pos[1] < height
 
 
-def trace_guard(start, limit=1_000_000) -> Tuple[set, Tuple[int, int, int]]:
-    pos = start
-    directions = {pos}
+def trace_guard(start, history=None, limit=10_000) -> Tuple[set, Tuple[int, int, int]]:
+    directions = history if history else [start]
+    dirset = set(directions)
+    pos = directions[-1]
     for _ in range(limit):
         nxt = move(pos)
         if not in_area(nxt):
@@ -30,9 +30,10 @@ def trace_guard(start, limit=1_000_000) -> Tuple[set, Tuple[int, int, int]]:
             nxt = move(rotate(pos, amount=2))
         if not in_area(nxt):
             return directions, outside
-        if nxt in directions:
+        if nxt in dirset:
             return directions, nxt
-        directions.add(nxt)
+        directions.append(nxt)
+        dirset.add(nxt)
         pos = nxt
     raise Exception("Oh no too long!")
 
@@ -61,10 +62,10 @@ print(f"Part 1: {len(set(map(lambda t: (t[0],t[1]), visited)))}")
 
 # Part 2
 obstructions = set()
-for x, y, d in visited:
+for i, (x, y, d) in enumerate(visited):
     if (x, y, 0) != start:
         obstacles.add((x, y))
-        _, location = trace_guard(start)
+        _, location = trace_guard(visited[i - 1], history=visited[:i])
         if location != outside:
             obstructions.add((x, y))
         obstacles.remove((x, y))
