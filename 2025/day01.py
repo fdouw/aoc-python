@@ -11,7 +11,7 @@ def sign(n: int) -> int:
 
 
 with open("inputs/01.txt") as f:
-    turns = [int(l[1:]) if l[0] == "R" else -int(l[1:]) for l in f.readlines()]
+    turns = [int(l.replace("R", "").replace("L", "-")) for l in f.readlines()]
 
 
 part1 = 0
@@ -22,7 +22,7 @@ for t in turns:
     if dial == 0:
         part1 += 1
 
-print(f"{part1 = }")
+print(f"Part 1: {part1}")
 
 part2 = 0
 dial = 50
@@ -42,4 +42,4 @@ for turn in turns:
     dial = next_dial % 100
     part2 += delta
 
-print(f"{part2 = }")
+print(f"Part 2: {part2}")
