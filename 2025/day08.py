@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from math import sqrt
+from heapq import heappop, nsmallest
 
 
 data_file = "inputs/08.txt"
@@ -8,8 +8,7 @@ max_connections = 1000
 
 
 def dist(a: list[int], b: list[int]) -> int:
-    # The sqrt isn't necessary, but it is faster!?
-    return sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2)
+    return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2
 
 
 def value(i: int) -> int:
@@ -31,14 +30,15 @@ with open(data_file) as f:
 box_count = len(junction_boxes)
 
 # This dist matrix is symmetric, so only compute distances[i][j] for j < i
-distances = sorted(
-    [(dist(junction_boxes[i], junction_boxes[j]), i, j) for i in range(box_count) for j in range(i)], reverse=True
+distances = nsmallest(
+    max_connections * 10,
+    ((dist(junction_boxes[i], junction_boxes[j]), i, j) for i in range(box_count) for j in range(i)),
 )
 
 uf = list(range(box_count))
 circuit_count = box_count
 for _joined in range(max_connections):
-    _, i, j = distances.pop()
+    _, i, j = heappop(distances)
 
     if value(i) != value(j):
         # i and j are not in the same circuit yet
@@ -56,7 +56,7 @@ part1 = circuit_sizes[0] * circuit_sizes[1] * circuit_sizes[2]
 # Part 2: keep going until all is connected
 part2 = None
 while circuit_count > 1:
-    _, i, j = distances.pop()
+    _, i, j = heappop(distances)
 
     if value(i) != value(j):
         # i and j are not in the same circuit yet
